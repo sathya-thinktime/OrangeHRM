@@ -1,0 +1,15 @@
+# System Requirements & Dependencies for QA Automation Framework
+
+# Core Runtime
+- Node.js (v16.0 or higher recommended)
+- npm (Node Package Manager)
+
+# NPM Packages (Installed via package.json)
+- @playwright/test (^1.x)
+- dotenv (^16.x)
+- @types/node (^20.x)
+
+# Browsers Supported
+- Chromium
+- Firefox
+- WebKit
