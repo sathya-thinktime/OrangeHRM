@@ -1,375 +1,364 @@
-# QA Automation Assessment
+# OrangeHRM Playwright Automation
 
-An end-to-end **QA Automation Framework** built using **Playwright, TypeScript, and Page Object Model (POM)**. The framework covers both **UI automation** and **API testing**, with a focus on maintainability, reusability, clean project structure, externalized test data, and environment-based configuration.
+A TypeScript-based test automation project using
+[Playwright](https://playwright.dev/) for UI and API testing. The
+project is organized around reusable Page Object Model (POM) classes,
+API client helpers, test data, and Playwright's test runner and reports.
 
----
+## Table of Contents
 
-## 📌 Project Overview
+-   [Overview](#overview)
+-   [Tech Stack](#tech-stack)
+-   [Project Structure](#project-structure)
+-   [Prerequisites](#prerequisites)
+-   [Installation](#installation)
+-   [Configuration](#configuration)
+-   [Running Tests](#running-tests)
+-   [Reports and Test Artifacts](#reports-and-test-artifacts)
+-   [Test Organization](#test-organization)
+-   [Troubleshooting](#troubleshooting)
+-   [Good Practices](#good-practices)
 
-This project demonstrates a scalable automation framework for validating application workflows through:
+## Overview
 
-* UI End-to-End (E2E) automation
-* REST API automation
-* Page Object Model (POM)
-* Externalized test data
-* Environment-based configuration
-* Reusable page and API components
-* Playwright HTML reporting
+This repository is intended to keep UI and API automation in one
+Playwright project.
 
-The framework is designed to demonstrate practical QA automation practices suitable for real-world projects.
+-   **UI automation:** Validate application workflows through the
+    browser.
+-   **API automation:** Send requests and verify response status codes,
+    response bodies, and CRUD operations.
+-   **Page Object Model:** Keep page locators and actions reusable and
+    separate from test assertions.
+-   **Reusable API clients:** Centralize API request logic in helper
+    classes.
+-   **Test data:** Store reusable input data separately from test code.
+-   **Playwright reports:** Review test results and investigate
+    failures.
 
----
+The main application URL used for the OrangeHRM demo is:
 
-## 🎯 Scenario Selection
+`https://opensource-demo.orangehrmlive.com/`
 
-### Employee Lifecycle Management
+> This is a public demo environment. Test data and availability may
+> change, and tests that create or modify records can be affected by
+> existing demo data.
 
-The primary UI automation scenario covers a complete employee lifecycle:
+## Tech Stack
 
-1. User login
-2. Add a new employee
-3. Search for the created employee
-4. Verify employee details
-5. Delete the employee
-6. Logout
+-   TypeScript
+-   Node.js and npm
+-   Playwright Test
+-   Playwright browser automation
+-   Playwright API testing (`APIRequestContext`)
+-   Page Object Model (POM)
 
-This scenario was selected because it covers multiple real-world user interactions and demonstrates how the **Page Object Model** can be used to create maintainable and reusable automation components.
+## Project Structure
 
-API automation is also included to complement the UI automation and demonstrate backend validation capabilities.
-
----
-
-## 🛠️ Technology Stack
-
-| Technology            | Purpose                           |
-| --------------------- | --------------------------------- |
-| **Playwright**        | UI and API automation             |
-| **TypeScript**        | Programming language              |
-| **Node.js**           | Runtime environment               |
-| **npm**               | Package and dependency management |
-| **Page Object Model** | Framework design pattern          |
-| **JSON**              | External test data management     |
-| **dotenv**            | Environment configuration         |
-| **Git**               | Version control                   |
-| **GitHub**            | Source code repository            |
-
----
-
-## 🏗️ Framework Architecture
-
-The framework follows the **Page Object Model (POM)** design pattern to separate test logic from page-specific implementation.
-
-### Key Design Principles
-
-* Page classes encapsulate UI locators and actions.
-* Test files contain the actual test scenarios and validations.
-* Test data is maintained separately in JSON files.
-* Environment-specific URLs are managed using `.env`.
-* API request logic is separated from API test cases.
-* Common functionality is implemented through reusable components.
-* UI and API tests are organized into separate test suites.
-
----
-
-## 📂 Project Structure
-
-```text
-qa-automation/
-│
-├── api/                           # API request handlers and reusable API helpers
-│   ├── auth.api.ts
-│   ├── users.api.ts
-│   ├── ReqResApi.ts
-│
-├── pages/                         # Page Object Model classes
-│   ├── EmployeeListPage.ts
-│   ├── EmployeePage.ts
-│   └── LoginPage.ts
-│
-├── test-data/                     # Externalized test data
-│   ├── employee.json
-│   └── loginData.json
-│
-├── tests/                         # Test suites
-│   ├── api/                       # API test cases
-│   └── ui/                        # UI E2E test cases
-│
-├── playwright-report/             # Generated Playwright HTML report
-├── test-results/                  # Screenshots, traces and test artifacts
-│
-├── .env                           # Environment variables
-├── requirements.txt               # Includes modules to be installed for the test script
-├── .gitignore                     # Git ignore configuration
-├── package.json                   # Project dependencies and scripts
-├── playwright.config.ts           # Playwright configuration
-├── tsconfig.json                  # TypeScript configuration
-└── README.md                      # Project documentation
+``` text
+orangeqa/
+└── OrangeHRM/
+    ├── api/
+    │   ├── ObjectsApi.ts       # Reusable API operations for the Objects API
+    │   └── RestfulApi.ts       # Reusable REST API helper methods
+    ├── POM Pages/              # Page Object Model classes for UI pages
+    ├── recording/              # Supporting recordings or recorded artifacts, if used
+    ├── test-data/              # Reusable test data and fixtures
+    ├── test-results/           # Results and artifacts generated during test runs
+    ├── tests/                  # UI and API test specifications
+    ├── playwright-report/      # HTML report output
+    ├── .env                    # Local environment variables (do not commit secrets)
+    ├── .gitignore
+    ├── package.json            # Dependencies and npm scripts
+    ├── package-lock.json
+    ├── playwright.config.ts    # Playwright test configuration
+    ├── README.md
+    ├── requirements.txt        # Keep only if this project uses Python dependencies
+    └── tsconfig.json           # TypeScript compiler configuration
 ```
 
----
+The exact files inside `tests/`, `POM Pages/`, and `test-data/` may
+change as the project grows.
 
-# 🧪 Test Coverage
+## Prerequisites
 
-## UI Automation
+Install the following before running the tests:
 
-The UI automation covers the complete Employee Lifecycle Management workflow.
+1.  **Node.js** --- use a supported LTS version where possible.
+2.  **npm** --- included with Node.js.
+3.  **Visual Studio Code** or another TypeScript editor (recommended).
+4.  **Git** (recommended for source control).
 
-### Authentication
+Check your installation:
 
-* User login
-* Login validation
-* Secure credential handling through externalized test data
-* User logout
-
-### Employee Management
-
-* Add a new employee
-* Generate/use dynamic employee data
-* Search for an employee
-* Validate employee profile information
-* Delete an employee
-* Verify successful deletion
-
-### Framework Validation
-
-* Reusable Page Objects
-* Locator abstraction
-* Assertions
-* Synchronization and auto-waiting
-* Test data separation
-* End-to-end workflow validation
-
----
-
-## 🔌 API Testing
-
-The framework also includes REST API automation.
-
-### API Coverage
-
-* REST API endpoint validation
-* GET requests
-* POST requests
-* PUT/PATCH requests
-* DELETE requests
-* HTTP status code validation
-* Response payload validation
-* Request payload validation
-* CRUD workflow validation
-
-API tests are maintained separately from UI tests to keep the framework modular and maintainable.
-
----
-
-# ⚙️ Installation & Setup
-
-## 1. Clone the Repository
-
-```bash
-git clone <repository-url>
-cd qa-automation
+``` bash
+node --version
+npm --version
 ```
 
-## 2. Install Dependencies
+## Installation
 
-```bash
+Open a terminal in the project directory --- the folder containing
+`package.json` --- and run:
+
+``` bash
 npm install
 ```
 
-## 3. Install Playwright Browsers
+Install the browsers required by the Playwright configuration:
 
-```bash
+``` bash
 npx playwright install
 ```
 
----
+If you only need Chromium, install that browser:
 
-# 🔐 Environment Configuration
-
-Create a `.env` file in the root directory:
-
-```env
-BASE_URL=https://your-target-application.com
-API_BASE_URL=https://your-api-url.com
+``` bash
+npx playwright install chromium
 ```
 
-Environment variables are loaded through the Playwright configuration and can be used across the framework.
+On Windows PowerShell, if script execution policy prevents `npx` from
+running, try the Windows command shim:
 
-> **Note:** Do not commit sensitive credentials or secrets to GitHub. Add `.env` to `.gitignore`.
-
-Example:
-
-```gitignore
-.env
-node_modules/
-playwright-report/
-test-results/
+``` powershell
+npx.cmd playwright test
 ```
 
----
+## Configuration
 
-# 📊 Test Data Management
+### 1. Environment variables
 
-Test data is maintained separately from the test scripts using JSON files.
+Create or update the local `.env` file with the variables expected by
+`playwright.config.ts` and the test code. For example:
 
-Example:
-
-```text
-test-data/
-├── employee.json
-└── loginData.json
+``` dotenv
+BASE_URL=https://opensource-demo.orangehrmlive.com/
 ```
 
-This approach helps to:
+Add credentials or API settings only if the tests require them. **Use
+the exact variable names referenced in your code**; the example above is
+illustrative and may need to be adjusted.
 
-* Avoid hard-coded test data
-* Improve test maintainability
-* Support data-driven testing
-* Reuse test data across multiple scenarios
-* Keep test logic clean and readable
+Do not commit real usernames, passwords, tokens, or other secrets. Keep
+`.env` in `.gitignore` and provide a safe `.env.example` file with
+placeholder values if other people need to configure the project.
 
----
+### 2. Playwright configuration
 
-# ▶️ Test Execution
+Review `playwright.config.ts` to confirm:
 
-## Run All Tests
+-   `testDir` points to the correct test folder.
+-   `baseURL` is configured for the target application.
+-   Browser projects match the browsers you intend to run.
+-   `headless` is set according to whether you want visible browser
+    execution.
+-   Retries, timeouts, workers, and reporters match your test
+    environment.
+-   Environment variables are loaded before they are used.
 
-```bash
+If a test uses an API endpoint different from the OrangeHRM application,
+configure that endpoint in the relevant API helper or environment
+variable rather than assuming it shares the UI base URL.
+
+## Running Tests
+
+Run commands from the directory containing `package.json`.
+
+### Run the full test suite
+
+``` bash
 npx playwright test
 ```
 
----
+### Run tests with a visible browser
 
-## Run Tests in UI Mode
-
-```bash
-npx playwright test --ui
-```
-
-Playwright UI Mode provides an interactive interface for exploring and debugging test execution.
-
----
-
-## Run UI Tests
-
-```bash
-npx playwright test tests/ui/
-```
-
----
-
-## Run API Tests
-
-```bash
-npx playwright test tests/api/
-```
-
----
-
-## Run a Specific Test File
-
-```bash
-npx playwright test tests/ui/employee.spec.ts
-```
-
----
-
-## Run Tests in Headed Mode
-
-```bash
+``` bash
 npx playwright test --headed
 ```
 
----
+The `--headed` option opens the browser for UI tests. API tests do not
+open a browser.
 
-## Run a Specific Browser
+### Run tests in debug mode
 
-```bash
+``` bash
+npx playwright test --debug
+```
+
+### Run a specific test file
+
+Replace the example path with a file that exists in your `tests/`
+directory:
+
+``` bash
+npx playwright test tests/api/employees.spec.ts
+```
+
+For example, if you have separate UI and API folders:
+
+``` bash
+npx playwright test tests/ui
+npx playwright test tests/api
+```
+
+### Filter tests by title
+
+``` bash
+npx playwright test -g "Create an employee"
+```
+
+### Run a specific browser project
+
+``` bash
 npx playwright test --project=chromium
 ```
 
----
+Use the project name defined in `playwright.config.ts`. The name may not
+be `chromium` in every configuration.
 
-# 📑 Reporting
+> If `package.json` defines project-specific scripts, you can use those
+> scripts with `npm run <script-name>`. Check the `scripts` section
+> before relying on a particular script name.
 
-Playwright generates an HTML report after test execution.
+## Reports and Test Artifacts
 
-To open the report:
+After a test run, Playwright may generate output in:
 
-```bash
+-   **`playwright-report/`** --- HTML report files, when the HTML
+    reporter is enabled.
+-   **`test-results/`** --- test result data, traces, screenshots, or
+    other artifacts configured for failed tests.
+
+Open the HTML report with:
+
+``` bash
 npx playwright show-report
 ```
 
-The report provides:
+If the report folder is stored at a custom path, provide that path:
 
-* Test execution summary
-* Passed and failed test cases
-* Execution duration
-* Failure details
-* Error messages
-* Stack traces
-* Screenshots
-* Test execution artifacts
+``` bash
+npx playwright show-report playwright-report
+```
 
----
+The report is generated by a test run; run the tests first if no report
+is available. Review the terminal output and the HTML report for failed
+tests, error messages, screenshots, and traces when configured.
 
-# 🧩 Framework Highlights
+## Test Organization
 
-* **Playwright Test Runner**
-* **TypeScript** for type safety
-* **Page Object Model (POM)**
-* Reusable page components
-* Reusable API components
-* Environment-based configuration
-* Externalized JSON test data
-* Separate UI and API test suites
-* Async/await architecture
-* Built-in Playwright auto-waiting
-* Screenshot and trace support
-* HTML test reporting
-* Clean and modular folder structure
+### UI tests
 
----
+UI test files should focus on user-visible behavior and assertions.
+Reusable page locators and actions belong in the corresponding class
+under `POM Pages/`.
 
-# 📋 Assumptions
+A typical UI test flow is:
 
-The following assumptions are made for executing the automation suite:
+1.  Open the application.
+2.  Log in using the configured test approach.
+3.  Perform the required action.
+4.  Assert the expected UI state or message.
+5.  Clean up test data when practical and supported.
 
-* Node.js and npm are installed.
-* A stable internet connection is available.
-* The target application environment is accessible.
-* Valid test credentials are available.
-* Required API endpoints are available.
-* Playwright browser binaries are installed.
-* Test data is compatible with the target environment.
+### API tests
 
----
+API test files should verify HTTP status codes, response payloads, and
+expected behavior. Reusable request methods belong in `api/` helper
+classes.
 
-# 🚀 Future Improvements
+For CRUD scenarios, consider validating:
 
-The framework can be extended with the following enhancements:
+-   **Create:** response status and returned record data.
+-   **Read:** the created record can be retrieved when the API supports
+    retrieval.
+-   **Update:** updated fields match the submitted values.
+-   **Delete:** deletion returns the documented status, and the record
+    is no longer available when the API supports that check.
 
-* Cross-browser execution using Chromium, Firefox, and WebKit
-* Parallel test execution optimization
-* GitHub Actions CI/CD integration
-* Allure reporting
-* Docker support
-* Advanced data-driven testing
-* API schema validation
-* Authentication/token management
-* Retry strategy for selected scenarios
-* Test tagging and selective execution
-* Environment-specific configuration files
-* Centralized test data management
+Use the status codes documented by the API under test; not every API
+returns `200` for every successful operation.
 
----
+### Test data
 
-# 👤 Author
+Keep reusable input data in `test-data/` rather than duplicating values
+across test files. Use unique values when tests create records, and
+avoid putting credentials or tokens in committed test data.
 
-**QA Automation Assessment**
+## Troubleshooting
 
-Built using:
+### Browser download fails
 
-**Playwright | TypeScript | API Testing | Page Object Model | Node.js**
+Try installing the browser again:
 
----
+``` bash
+npx playwright install chromium
+```
+
+If the download continues to fail, check your network connection,
+proxy/firewall restrictions, available disk space, and the Playwright
+version in `package.json`. Use a browser version supported by the
+installed Playwright package.
+
+### `npx` is blocked in PowerShell
+
+Try:
+
+``` powershell
+npx.cmd playwright test
+```
+
+This avoids invoking the PowerShell `npx.ps1` script. Avoid changing
+machine-wide execution policy settings unless you understand the
+security implications and have permission to do so.
+
+### A test times out waiting for a locator
+
+-   Confirm the locator matches the current application UI.
+-   Check whether the page has finished loading and whether a dialog or
+    overlay is blocking the action.
+-   Prefer Playwright locators such as `getByRole`, `getByLabel`, and
+    `getByTestId` when appropriate.
+-   Assert the expected state before interacting with the element.
+-   Check whether the record already exists or the demo application has
+    changed.
+
+### A test passes locally but fails intermittently
+
+-   Avoid fixed sleeps where possible; wait for a meaningful UI state or
+    API response.
+-   Use unique test data and isolate tests from one another.
+-   Review worker and parallel execution settings.
+-   Capture traces or screenshots on failure to help diagnose the issue.
+
+### HTML report is missing
+
+Confirm that the HTML reporter is enabled in `playwright.config.ts`, run
+the tests, and then execute:
+
+``` bash
+npx playwright show-report
+```
+
+## Good Practices
+
+-   Keep tests independent and repeatable.
+-   Use Page Object Model classes for reusable UI actions, not as a
+    place for all test assertions.
+-   Keep API request logic in API helper classes.
+-   Store environment-specific values in configuration or environment
+    variables.
+-   Never commit secrets, authentication tokens, or sensitive test data.
+-   Prefer assertions on observable behavior over implementation
+    details.
+-   Use unique test data and clean up created records when possible.
+-   Keep dependencies reproducible by committing `package-lock.json`.
+-   Update this README whenever setup steps, folder names, test
+    commands, or configuration change.
+
+## Notes
+
+This README describes the project structure shown in the repository
+explorer. Update the example commands and environment-variable names to
+match the current `package.json`, `playwright.config.ts`, and test
+files.
