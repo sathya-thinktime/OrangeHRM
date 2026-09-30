@@ -8,13 +8,13 @@ export const usersTestData = {
   },
 
   createUser: {
-    name: 'Vasika',
+    name: 'Sathya',
     job: 'QA Engineer',
   },
 
   updateUser: {
     id: 2,
-    name: 'Vasika',
+    name: 'Sathya',
     job: 'Automation Engineer',
   },
 
