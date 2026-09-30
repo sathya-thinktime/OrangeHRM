@@ -9,18 +9,18 @@ export const usersTestData = {
 
   createUser: {
     name: 'Sathya',
-    job: 'QA Engineer',
+    job: 'QA Test Engineer',
   },
 
   updateUser: {
     id: 2,
     name: 'Sathya',
-    job: 'Automation Engineer',
+    job: 'Project Manager',
   },
 
   patchUser: {
     id: 2,
-    job: 'SDET',
+    job: 'Product Operations',
   },
 
   listUsers: {
